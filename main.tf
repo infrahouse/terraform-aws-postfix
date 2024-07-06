@@ -63,10 +63,16 @@ resource "aws_launch_template" "postfix" {
   iam_instance_profile {
     arn = module.instance-profile.instance_profile_arn
   }
+
+  network_interfaces {
+    associate_public_ip_address = var.associate_public_ip_address
+    security_groups = [
+      aws_security_group.postfix.id
+    ]
+  }
+
   user_data = module.mta-userdata.userdata
-  vpc_security_group_ids = [
-    aws_security_group.postfix.id
-  ]
+
   tags = local.tags
 }
 
