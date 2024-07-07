@@ -31,6 +31,7 @@ module "mta-userdata" {
   puppet_module_path       = var.puppet_module_path
   puppet_root_directory    = var.puppet_root_directory
   puppet_manifest          = var.puppet_manifest
+  custom_facts             = var.puppet_custom_facts
   packages = concat(
     var.packages,
     [
