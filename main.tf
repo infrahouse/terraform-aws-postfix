@@ -85,10 +85,29 @@ resource "aws_autoscaling_group" "postfix" {
   max_size              = var.asg_max_size == null ? length(var.subnet_ids) + 1 : var.asg_max_size
   vpc_zone_identifier   = var.subnet_ids
   max_instance_lifetime = 90 * 24 * 3600
-  launch_template {
-    id      = aws_launch_template.postfix.id
-    version = aws_launch_template.postfix.latest_version
+  dynamic "launch_template" {
+    for_each = var.on_demand_base_capacity == null ? [1] : []
+    content {
+      id      = aws_launch_template.postfix.id
+      version = aws_launch_template.postfix.latest_version
+    }
   }
+  dynamic "mixed_instances_policy" {
+    for_each = var.on_demand_base_capacity == null ? [] : [1]
+    content {
+      instances_distribution {
+        on_demand_base_capacity                  = var.on_demand_base_capacity
+        on_demand_percentage_above_base_capacity = 0
+      }
+      launch_template {
+        launch_template_specification {
+          launch_template_id = aws_launch_template.postfix.id
+          version            = aws_launch_template.postfix.latest_version
+        }
+      }
+    }
+  }
+
   target_group_arns = [
     aws_lb_target_group.postfix.arn
   ]
