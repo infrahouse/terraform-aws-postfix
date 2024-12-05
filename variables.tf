@@ -16,6 +16,12 @@ variable "asg_max_size" {
   default     = null
 }
 
+variable "associate_public_ip_address" {
+    description = "Associate a public IP address with the instance."
+    type        = bool
+    default     = false
+}
+
 variable "extra_files" {
   description = "Additional files to create on an instance."
   type = list(object({
