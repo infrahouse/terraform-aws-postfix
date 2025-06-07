@@ -110,7 +110,7 @@ variable "route53_zone_id" {
 }
 
 variable "route53_hostname" {
-  description = "An A record with this name will be created in the rout53 zone"
+  description = "An A record with this name will be created in the route53 zone"
   type        = string
   default     = "mail"
 }
