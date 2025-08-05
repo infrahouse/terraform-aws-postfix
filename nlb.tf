@@ -10,7 +10,12 @@ resource "aws_lb" "postfix" {
   security_groups = [
     aws_security_group.postfix.id
   ]
-  tags = local.tags
+  tags = merge(
+    local.tags,
+    {
+      module_version : local.module_version
+    }
+  )
 }
 
 resource "aws_lb_target_group" "postfix" {
